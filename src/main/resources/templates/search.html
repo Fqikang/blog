@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th ="http://www.w3.org/1999/xhtml">
+<head th:replace="_fragments :: head(~{::title})">
+    <meta charset="utf-8">
+    <title>search</title>
+    <link rel="stylesheet" href="http://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css">
+    <link rel="stylesheet" href="../static/css/me.css">
+    <meta name="viewport" content="width=device-width initial-scale=1.0">
+</head>
+<body>
+<!--    导航-->
+<nav th:replace="_fragments :: menu(1)" class="ui inverted attached segment m-padded-tb ">
+    <div class="ui container">
+        <!--stackable适配手机端 堆叠-->
+        <div class="ui inverted secondary stackable menu">
+            <h2 class="ui teal header item">Blog</h2>
+            <!--m-mobile-hide手机端时隐藏-->
+            <a href="#" class="m-item item m-mobile-hide"><i class="home icon"></i>首页</a>
+            <a href="#" class="m-item item m-mobile-hide"><i class="idea icon"></i>分类</a>
+            <a href="#" class="m-item item m-mobile-hide"><i class="tags icon"></i>标签</a>
+            <a href="#" class="m-item item m-mobile-hide"><i class="info icon"></i>归档</a>
+            <a href="#" class="m-item item m-mobile-hide"><i class="info icon"></i>关于我</a>
+            <div class="right item m-item m-mobile-hide">
+                <!--transparent深色-->
+                <div class="ui icon inverted transparent input">
+                    <input type="text" placeholder="Search">
+                    <i class="search link icon"></i>
+                </div>
+            </div>
+        </div>
+        <a href="#" class="ui menu toggle black button m-right-top m-mobile-show">
+            <i class="sidebar icon"></i>
+        </a>
+    </div>
+</nav>
+
+<!--container-->
+<div class="m-padded-tb-big m-container">
+    <div class="ui container  my-padded-tb-large">
+
+
+        <!--博客页面-->
+        <div class="ui top attached teal segment">
+            <!--blog主体-->
+            <div class="eleven wide column">
+
+                <!--header-->
+                <div class="ui top attached segment">
+                    <div class="ui middle aligned two column grid">
+                        <div class="column">
+                            <h3 class="ui teal header">搜索结果</h3>
+                        </div>
+
+                        <div class="column right aligned">
+                            共 <h2 class="ui orange header m-inline-block my-padded-tb-tiny" th:text="${page.totalElements}"> 14 </h2> 篇
+                        </div>
+                    </div>
+                </div>
+
+                <!--context-->
+                <!--文字、图片-->
+                <div class="ui attached  segment">
+                    <div class="ui vertical segment my-padded-tb-large" th:each="blog : ${page.content}">
+                        <div class="ui middle aligned mobile reversed stackable grid" >
+
+                            <!--文字-->
+                            <div class="eleven wide column">
+                                <h3 class="ui header" ><a href="#" th:href="@{/blog/{id}(id=${blog.id})}" target="_blank" class="m-black" th:text="${blog.title}">Collection、泛型</a></h3>
+                                <p class="m-text" th:text="|${blog.description}......|">集合概述：在前面基础班我们已经学习过并使用过集合ArrayList ,那么集合到底是什么呢?集合：
+                                    集合是java中提供的一种容器，可以用来存储多个数据。集合和数组既然都是容器，它们有啥区别呢？
+                                    ...... </p>
+
+                                <!--头像、作者、日期、浏览量-->
+                                <div class="ui grid">
+                                    <div class="eleven wide column">
+                                        <div class="ui horizontal link list">
+                                            <div class="item">
+                                                <img th:src="@{${blog.user.avatar}}" src="https://picsum.photos/id/1006/100/100" class="ui avatar image"></img>
+                                                <div class="content"><a href="#" th:text="${blog.user.nickname}" class="header">康康我</a></div>
+                                            </div>
+                                            <div class="item">
+                                                <i class="calendar icon"></i><span th:text="${#dates.format(blog.updateTime,'yyyy-MM-dd')}">2021/1/19</span>
+                                            </div>
+                                            <div class="item"><i class="eye icon" ></i><span th:text="${blog.views}">1212</span></div>
+                                        </div>
+                                    </div>
+                                    <div class="right aligned five wide column">
+                                        <a href="#" target="_blank" class="ui teal basic label my-padded-tb-tiny" th:text="${blog.type.name}">认知升级</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!--图片-->
+                            <div class="five wide column">
+                                <a href="#" th:href="@{/blog/{id}(id=${blog.id})}" target="_blank">
+                                    <img src="https://picsum.photos/id/1006/800/450" th:src="@{${blog.firstPicture}}"  alt="" class="ui rounded image">
+                                </a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!--bottom 上下页-->
+                <div class="ui bottom attached segment" th:if="${page.totalPages}>1">
+                    <div class="ui attached segment">
+                        <div class="ui middle aligned two column grid">
+                            <div class="column">
+                                <a href="#" th:href="@{/(page=${page.number}-1)}" th:unless="${page.first}" class="ui teal mini basic button">上一页</a>
+                            </div>
+                            <div class="column right aligned">
+                                <a href="#" th:href="@{/(page=${page.number}+1)}" th:unless="${page.last}" class="ui teal mini basic button">下一页</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--页脚-->
+<footer th:replace="_fragments :: footer" class="ui inverted vertical segment m-padded-tb-massive">
+    <div class="ui center aligned container">
+        <div class="ui inverted divided grid">
+            <div class="three wide column">
+                放图片
+            </div>
+            <div class="three wide column">
+                <h4 class="ui inverted header"> New Blog</h4>
+                <div class="ui inverted link list">
+                    <a href="#" class="item">Story</a>
+                    <a href="#" class="item">Story</a>
+                    <a href="#" class="item">Story</a>
+                </div>
+            </div>
+            <div class="three wide column">
+                <h4 class="ui inverted header">联系我</h4>
+                <div class="ui inverted link list">
+                    <a href="#" class="it em">1540697727</a>
+                    <a href="#" class="item">1540697727@qq.com</a>
+                </div>
+            </div>
+            <div class="seven wide column">
+                <h4 class="ui inverted header">JQuery</h4>
+                <p>jQuery 是一个高效、精简并且功能丰富的 JavaScript 工具库。它提供的 API 易于使用且兼容众多浏览器，这让诸如 HTML 文档遍历和操作、事件处理、动画和 Ajax
+                    操作更加简单。</p>
+            </div>
+        </div>
+
+        <div class="ui inverted section divider"></div>
+        <p class="m-text-thin m-text-spaced m-opacity-mini">© 2013-2020 京ICP备11008151号-8 京公网安备11010802014853</p>
+    </div>
+</footer>
+
+
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"></script>
+<script>
+    // click无法正常使用，所以使用on
+    $('.menu.toggle').on('click', function () {
+        // 隐藏标签属性为m-item的m-mobile-hide的class
+        $('.m-item').toggleClass('m-mobile-hide');
+    });
+
+    $('#payButton').popup({
+        // 绑定标签
+        popup: $('.payQR.popup'),
+        // 触发条件
+        on: 'click',
+        // 绑定的标签出现的位置
+        position: 'bottom left',
+    });
+</script>
+</body>
+</html>

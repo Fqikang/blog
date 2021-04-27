@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="admin/_fragments :: head(~{::title})">
+    <meta charset="utf-8">
+    <title>标签管理</title>
+    <link rel="stylesheet" href="http://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css">
+    <link rel="stylesheet" href="../../static/css/me.css">
+    <meta name="viewport" content="width=device-width initial-scale=1.0">
+</head>
+<body>
+<!--    导航-->
+<nav th:replace="admin/_fragments :: menu(3)">
+
+</nav>
+<!--二级导航-->
+<div class="ui attached menu">
+    <div class="ui container">
+        <div class="ui right menu">
+            <a href="#" th:href="@{/admin/types/input}" class="item active">发布</a>
+            <a href="#" th:href="@{/admin/types}" class="teal item">列表</a>
+        </div>
+    </div>
+
+</div>
+
+
+<!--中间内容-->
+<div class="m-container my-padded-tb-large">
+    <div class="ui container">
+        <!--        判断是否存在错误信息-->
+        <div class="ui success message" th:unless="${#strings.isEmpty(message)}">
+            <i class="close icon"></i>
+            <div class="header">提示：</div>
+            <p th:text="${message}"></p>
+        </div>
+
+        <table class="ui celled table">
+            <!--celled表格加线-->
+            <thead>
+            <tr>
+                <th></th>
+                <th>标签名</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="tag,iterStat : ${page.content}">
+                <td th:text="${iterStat.count}">1</td>
+                <td th:text="${tag.name}"></td>
+                <td>
+                    <a class="ui mini teal basic button" th:href="@{/admin/tags/input/{id}(id=${tag.id})}">编辑</a><!-- -->
+                    <a class="ui mini red basic button" th:href="@{/admin/tags/delete/{id}(id=${tag.id})}">删除</a>
+                </td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr>
+                <th colspan="6">
+                    <div class="ui mini pagination menu" th:if="${page.totalPages}>1">
+                        <a th:href="@{/admin/tags(page=${page.number}-1)}" class="item" th:unless="${page.first}">上一页</a>
+                        <a th:href="@{/admin/tags(page=${page.number}+1)}" class="item" th:unless="${page.last}">下一页</a>
+                    </div>
+                    <a href="" th:href="@{/admin/tags/input}" class="ui mini right floated teal basic button">新增</a>
+                </th>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+
+
+<!--页脚-->
+<footer th:replace="admin/_fragments :: footer" class="ui inverted vertical segment m-padded-tb-massive">
+    <div class="ui center aligned container">
+        <div class="ui inverted divided grid">
+            <div class="three wide column">
+                放图片
+            </div>
+            <div class="three wide column">
+                <h4 class="ui inverted header"> New Blog</h4>
+                <div class="ui inverted link list">
+                    <a href="#" class="item">Story</a>
+                    <a href="#" class="item">Story</a>
+                    <a href="#" class="item">Story</a>
+                </div>
+            </div>
+            <div class="three wide column">
+                <h4 class="ui inverted header">联系我</h4>
+                <div class="ui inverted link list">
+                    <a href="#" class="it em">1540697727</a>
+                    <a href="#" class="item">1540697727@qq.com</a>
+                </div>
+            </div>
+            <div class="seven wide column">
+                <h4 class="ui inverted header">JQuery</h4>
+                <p>jQuery 是一个高效、精简并且功能丰富的 JavaScript 工具库。它提供的 API 易于使用且兼容众多浏览器，这让诸如 HTML 文档遍历和操作、事件处理、动画和 Ajax
+                    操作更加简单。</p>
+            </div>
+        </div>
+
+        <div class="ui inverted section divider"></div>
+        <p class="m-text-thin m-text-spaced m-opacity-mini">© 2013-2020 京ICP备11008151号-8 京公网安备11010802014853</p>
+    </div>
+</footer>
+
+
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"></script>
+<script>
+    // click无法正常使用，所以使用on
+    $('.menu.toggle').on('click', function () {
+        // 隐藏标签属性为m-item的m-mobile-hide的class
+        $('.m-item').toggleClass('m-mobile-hide');
+    });
+
+    $('.ui.dropdown').dropdown({
+        // 更改触发条件
+        on: 'hover'
+    });
+
+
+    // 消息提示关闭功能初始化
+    $('.message .close').on('click', function () {
+        $(this).closest('.message').transition('fade');
+    });
+</script>
+</body>
+</html>

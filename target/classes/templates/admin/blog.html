@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="admin/_fragments :: head(~{::title})">
+    <meta charset="utf-8">
+    <title>博客管理后台</title>
+    <link rel="stylesheet" href="http://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css">
+    <link rel="stylesheet" href="../../static/css/me.css">
+    <meta name="viewport" content="width=device-width initial-scale=1.0">
+</head>
+<body>
+<!--导航-->
+<nav th:replace="admin/_fragments :: menu(1)" class="ui inverted attached segment m-padded-tb-mini">
+    <div class="ui container">
+        <!--stackable适配手机端 堆叠-->
+        <div class="ui inverted secondary stackable menu">
+            <h2 class="ui teal header item">管理后台</h2>
+            <!--m-mobile-hide手机端时隐藏-->
+            <a href="#" class="m-item item m-mobile-hide"><i class="home icon"></i>首页</a>
+            <a href="#" class="m-item item m-mobile-hide"><i class="idea icon"></i>分类</a>
+            <a href="#" class="m-item item m-mobile-hide"><i class="tags icon"></i>标签</a>
+            <div class="right menu">
+                <div class="ui dropdown item">
+                    <div class="text">
+                        <img src="../../static/images/QQ图片20201115203555.png" alt="" class="ui avatar image">
+                        wzy
+                    </div>
+                    <i class="dropdown icon"></i>
+                    <div class="menu">
+                        <a href="#" class="item">注销</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <a href="#" class="ui menu toggle black button m-right-top m-mobile-show">
+            <i class="sidebar icon"></i>
+        </a>
+    </div>
+</nav>
+<!--二级导航-->
+<div class="ui attached menu">
+    <div class="ui container">
+        <div class="ui right menu">
+            <a href="#" th:href="@{/admin/blogs/input}" class="item">发布</a>
+            <a href="#"  th:href="@{/admin/blogs}" class="teal active item">列表</a>
+        </div>
+    </div>
+
+</div>
+
+
+<!--中间内容-->
+<div class="m-container m-padded-tb-massive">
+    <div class="ui container">
+        <form action="#" th:action="@{/admin/search}" method="post" class="ui segment form">
+            <input type="hidden" name="page">
+            <div class="inline fields">
+                <div class="field">
+                    <input type="text" class="" name="title" placeholder="标题">
+                </div>
+                <div class="field">
+                    <div class="ui selection dropdown">
+                        <!--隐含域-->
+                        <input type="hidden" name="typeId">
+                        <i class="dropdown icon"></i>
+                        <div class="default text">分类</div>
+                        <div class="menu">
+                            <!-- data-value表示真实的传给后端的值-->
+                            <div th:each="type : ${types}" class="item" data-value="1" th:data-value="${type.id}" th:text="${type.name}">错误日志</div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="ui checkbox">
+                        <!--id和for相关联，让点击文字时也可以选中-->
+                        <input type="checkbox" id="recommend" name="recommend">
+                        <label for="recommend">推荐</label>
+                    </div>
+                </div>
+                <div class="field">
+                    <button class="ui mini teal basic button"><i class="search icon"></i>搜索</button>
+                </div>
+            </div>
+        </form>
+
+        <div id="table-container">
+            <table th:fragment="blogList" class="ui compact teal table">
+                <!--celled表格加线-->
+                <thead>
+                <tr>
+                    <th></th>
+                    <th>标题</th>
+                    <th>类型</th>
+                    <th>推荐</th>
+                    <th>状态</th>
+                    <th>更新时间</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="blog,iterStat : ${page.content}">
+                    <td th:text="${iterStat.count}">1</td>
+                    <td th:text="${blog.title}">刻意练习清单</td>
+                    <td th:text="${blog.type.name}">认知升级</td>
+                    <td th:text="${blog.recomment}?'是':'否'">是</td>
+                    <td th:text="${blog.published} ? '草稿':'发布'"></td>
+                    <td th:text="${blog.updateTime}">2020-11-19</td>
+                    <td>
+                        <a href="" th:href="@{/admin/blogs/input/{id}(id=${blog.id})}" class="ui mini teal basic button">编辑</a>
+                        <a href="" th:href="@{/admin/blogs/delete/{id}(id=${blog.id})}" class="ui mini red basic button">删除</a>
+                    </td>
+                </tr>
+                </tbody>
+                <tfoot>
+                <tr>
+                    <th colspan="7">
+                        <div class="ui mini pagination menu" th:if="${page.totalPages}>1">
+                            <a onclick="page(this)" th:attr="data-page=${page.number}-1" th:unless="${page.first}" class="item">上一页</a>
+                            <a onclick="page(this)" th:attr="data-page=${page.number}+1" th:unless="${page.last}" class="item">下一页</a>
+                        </div>
+                        <a href="" th:href="@{/admin/blogs/input}" class="ui mini right floated teal basic button">新增</a>
+                    </th>
+                </tr>
+                </tfoot>
+            </table>
+
+            <!--提示信息-->
+            <div class="ui success message" th:unless="${#strings.isEmpty(message)}">
+                <i class="close icon"></i>
+                <div class="header">提示：</div>
+                <p th:text="${message}"></p>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<!--页脚-->
+<footer th:replace="admin/_fragments :: footer" class="ui inverted vertical segment m-padded-tb-massive">
+    <div class="ui center aligned container">
+        <div class="ui inverted divided grid">
+            <div class="three wide column">
+                放图片
+            </div>
+            <div class="three wide column">
+                <h4 class="ui inverted header"> New Blog</h4>
+                <div class="ui inverted link list">
+                    <a href="#" class="item">Story</a>
+                    <a href="#" class="item">Story</a>
+                    <a href="#" class="item">Story</a>
+                </div>
+            </div>
+            <div class="three wide column">
+                <h4 class="ui inverted header">联系我</h4>
+                <div class="ui inverted link list">
+                    <a href="#" class="it em">1540697727</a>
+                    <a href="#" class="item">1540697727@qq.com</a>
+                </div>
+            </div>
+            <div class="seven wide column">
+                <h4 class="ui inverted header">JQuery</h4>
+                <p>jQuery 是一个高效、精简并且功能丰富的 JavaScript 工具库。它提供的 API 易于使用且兼容众多浏览器，这让诸如 HTML 文档遍历和操作、事件处理、动画和 Ajax
+                    操作更加简单。</p>
+            </div>
+        </div>
+
+        <div class="ui inverted section divider"></div>
+        <p class="m-text-thin m-text-spaced m-opacity-mini">© 2013-2020 京ICP备11008151号-8 京公网安备11010802014853</p>
+    </div>
+</footer>
+
+
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"></script>
+<script>
+    // click无法正常使用，所以使用on
+    $('.menu.toggle').on('click', function () {
+        // 隐藏标签属性为m-item的m-mobile-hide的class
+        $('.m-item').toggleClass('m-mobile-hide');
+    });
+
+    $('#payButton').popup({
+        // 绑定标签
+        popup: $('.payQR.popup'),
+        // 触发条件
+        on: 'click',
+        // 绑定的标签出现的位置
+        position: 'bottom left',
+    });
+
+    $('.ui.dropdown').dropdown({
+        // 更改触发条件
+        on: 'hover'
+    });
+    function page(obj) {
+        $("[name='page']").val($(obj).data("page"));
+        loaddata();
+    }
+
+    $("#search-btn").click(function () {
+        $("[name='page']").val(0);
+        loaddate();
+    });
+
+    //局部刷新界面
+    function loaddata() {
+        $("#table-container").load(/*[[@{/admin/blogs/search}]]*/"/admin/blogs/search", {
+            title: $("[name='title']").val(),
+            typeId: $("[name='typeId']").val(),
+            recomment: $("[name='recomment']").prop('checked'),
+            page: $("[name='page']").val()
+        });
+    };
+</script>
+</body>
+</html>
